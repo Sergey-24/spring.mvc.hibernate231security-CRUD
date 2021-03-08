@@ -17,6 +17,7 @@
                 <th>Last name</th>
                 <th>Age</th>
                 <th>Address</th>
+
             </tr>
             </thead>
             <tbody>
@@ -26,13 +27,11 @@
                 <td th:text="${user.lastName}"></td>
                 <td th:text="${user.age}"></td>
                 <td th:text="${user.address}"></td>
-                <td><a th:href="@{user-update/{id}(id=${user.id})}">Update</a></td>
-                <td><a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p><a href="/addNewUser">Save user</a></p>
+    <p><a th:href="@{/logout}">Logout</a></p>
 </div>
 </body>
 </html>

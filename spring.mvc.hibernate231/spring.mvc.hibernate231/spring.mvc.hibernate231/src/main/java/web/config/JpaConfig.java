@@ -2,6 +2,7 @@ package web.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -21,18 +22,40 @@ import javax.sql.DataSource;
 @ComponentScan(value = "web")
 public class JpaConfig {
 
-    @Autowired
-    private Environment env;
+//    @Autowired
+//    private Environment env;
+
+    @Value("${db.driver}")
+    private String driver;
+
+    @Value("${db.url}")
+    private String url;
+
+    @Value("${db.username}")
+    private String userName;
+
+    @Value("${db.password}")
+    private String password;
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("db.driver"));
-        dataSource.setUrl(env.getProperty("db.url"));
-        dataSource.setUsername(env.getProperty("db.username"));
-        dataSource.setPassword(env.getProperty("db.password"));
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(userName);
+        dataSource.setPassword(password);
         return dataSource;
     }
+
+//    @Bean
+//    public DataSource dataSource() {
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName(env.getProperty("db.driver"));
+//        dataSource.setUrl(env.getProperty("db.url"));
+//        dataSource.setUsername(env.getProperty("db.username"));
+//        dataSource.setPassword(env.getProperty("db.password"));
+//        return dataSource;
+//    }
 
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory emf) {

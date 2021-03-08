@@ -1,18 +1,31 @@
 package web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.dao.UserDao;
+import web.entity.Role;
 import web.entity.User;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+
     private UserDao userDao;
+
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     @Transactional
@@ -43,5 +56,27 @@ public class UserServiceImpl implements UserService {
     public void update(User user) {
         userDao.update(user);
     }
+
+    @Override
+    @Transactional
+    public User findByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = findByUsername(s);
+        if (user == null) {
+            throw new UsernameNotFoundException("");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getLastName(),
+                user.getPassword(), convRoles(user.getRoles()));
+    }
+
+    private Collection<? extends GrantedAuthority> convRoles(Collection<Role> roles) {
+        return roles.stream().map(x -> new SimpleGrantedAuthority(x.getName())).collect(Collectors.toList());
+    }
+
 }
 

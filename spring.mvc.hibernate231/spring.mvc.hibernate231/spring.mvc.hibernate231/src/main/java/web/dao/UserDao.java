@@ -1,5 +1,6 @@
 package web.dao;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import web.entity.User;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface UserDao {
 
     void update(User user);
 
+    User findByUsername(String name);
 }

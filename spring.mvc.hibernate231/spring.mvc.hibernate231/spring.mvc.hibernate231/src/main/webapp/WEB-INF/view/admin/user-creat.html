@@ -5,7 +5,7 @@
     <title>Add user</title>
 </head>
 <body>
-<form action="#" th:action="@{/addNewUser}" th:object="${user}" method="post">
+<form action="#" th:action="@{/admin/addNewUser}" th:object="${user}" method="post">
     <label for="firstName">first name</label>
     <input type="text" th:field="*{firstName}" id="firstName" placeholder="First Name">
     <label for="lastName">last name</label>
@@ -14,7 +14,12 @@
     <input type="text" th:field="*{age}" id="age" placeholder="age">
     <label for="address">address</label>
     <input type="text" th:field="*{address}" id="address" placeholder="address">
-    <input type="submit" value="addNewUser">
+    <label for="password">password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="password">
+    <label>
+        <p><input type="submit" value="addNewUser"></p>
+        <p><a th:href="@{/logout}">Logout</a></p>
+    </label>
 </form>
 </body>
 </html></html>

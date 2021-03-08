@@ -1,19 +1,16 @@
 package web.dao;
 
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import web.entity.User;
 
+import org.springframework.stereotype.Repository;
+import web.entity.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Repository
-@Component
-public class UserDaoImpl implements UserDao {
 
+@Repository
+public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
     EntityManager entityManager;
@@ -46,5 +43,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User user) {
         entityManager.merge(user);
+    }
+
+    @Override
+    public User findByUsername(String name) {
+        User user = entityManager.createQuery("SELECT u from User u WHERE u.firstName = :name", User.class).
+                setParameter("name", name).getSingleResult();
+        return user;
+
     }
 }
