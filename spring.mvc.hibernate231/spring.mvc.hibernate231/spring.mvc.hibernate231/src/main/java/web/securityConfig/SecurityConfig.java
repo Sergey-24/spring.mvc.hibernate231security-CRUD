@@ -12,16 +12,40 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import web.securityConfig.handler.LoginSuccessHandler;
 import web.service.UserService;
 
+import javax.sql.DataSource;
+
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userDetailsService;
     private final LoginSuccessHandler successUserHandler;
+    private final DataSource dataSource;
 
-    public SecurityConfig(UserService userDetailsService, LoginSuccessHandler successUserHandler) {
+    public SecurityConfig(UserService userDetailsService, LoginSuccessHandler successUserHandler, DataSource dataSource) {
         this.userDetailsService = userDetailsService;
         this.successUserHandler = successUserHandler;
+        this.dataSource = dataSource;
+    }
+
+    @Autowired
+    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().dataSource(dataSource);
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());// конфигурация для прохождения аутентификации
+
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
     }
 
     @Override
@@ -42,25 +66,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login");
     }
-
-    @Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
-        auth.authenticationProvider(authenticationProvider());// конфигурация для прохождения аутентификации
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
-
-
 }

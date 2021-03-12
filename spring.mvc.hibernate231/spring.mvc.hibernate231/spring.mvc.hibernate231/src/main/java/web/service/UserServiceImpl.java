@@ -68,15 +68,16 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = findByUsername(s);
         if (user == null) {
-            throw new UsernameNotFoundException("");
+            throw new UsernameNotFoundException(String.format("User '%s' not found", s));
         }
-        return new org.springframework.security.core.userdetails.User(user.getLastName(),
-                user.getPassword(), convRoles(user.getRoles()));
+//        return new org.springframework.security.core.userdetails.User(user.getFirstName(),
+//                user.getPassword(), convRoles(user.getRoles()));
+        return user;
     }
 
-    private Collection<? extends GrantedAuthority> convRoles(Collection<Role> roles) {
-        return roles.stream().map(x -> new SimpleGrantedAuthority(x.getName())).collect(Collectors.toList());
-    }
+//    private Collection<? extends GrantedAuthority> convRoles(Collection<Role> roles) {
+//        return roles.stream().map(x -> new SimpleGrantedAuthority(x.getName())).collect(Collectors.toList());
+//    }
 
 }
 

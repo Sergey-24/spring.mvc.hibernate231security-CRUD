@@ -20,7 +20,7 @@ public class User implements UserDetails {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
@@ -162,6 +162,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 
 }
 
